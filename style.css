@@ -1,0 +1,606 @@
+:root {
+  --primary-color: #7d6aff;
+  --primary-light: #e6e6fa;
+  --secondary-color: #333;
+  --background-color: #f4f7f9;
+  --card-background: #fff;
+  --text-color: #555;
+  --border-color: #ddd;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* --- Utility Classes --- */
+.hidden {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* --- Auth Pages (Login & Signup) --- */
+.auth-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--primary-color);
+  text-align: center;
+  color: white;
+}
+
+.auth-container {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+  width: 100%;
+  max-width: 400px;
+  color: var(--secondary-color);
+}
+
+.login-image {
+  font-size: 4rem;
+  margin-bottom: 10px;
+}
+
+.auth-title {
+  font-size: 3.5rem;   /* bigger size */
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.3rem;
+  color: #2c3e50;
+}
+
+.auth-subtitle {
+  font-size: 1.25rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #555;
+  font-style: italic;
+}
+
+.auth-form input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.auth-btn:hover {
+  background-color: #6a5ac9;
+}
+
+.demo-btn {
+  margin-top: 10px;
+  background-color: #28a745;
+}
+
+.demo-btn:hover {
+  background-color: #218838;
+}
+
+.auth-footer {
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+.auth-footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* --- App Layout --- */
+.app-view {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: var(--card-background);
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-nav a {
+  padding: 12px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--secondary-color);
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.page-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+/* --- Section Headers & Cards --- */
+.header {
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 2rem;
+}
+
+.header p {
+  margin: 5px 0 0;
+  color: var(--text-color);
+}
+
+.card {
+  background-color: var(--card-background);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+  margin-bottom: 20px;
+}
+
+.card h2,
+.card h3 {
+  margin-top: 0;
+  color: var(--secondary-color);
+}
+
+/* --- Dashboard Section --- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.summary-card .card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.summary-card p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.task-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.task-list li:last-child {
+  border-bottom: none;
+}
+
+.task-info {
+    flex-grow: 1;
+}
+
+.task-name {
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+.task-details {
+  font-size: 0.85em;
+  color: var(--text-color);
+  margin-top: 4px;
+}
+
+.task-completed .task-name,
+.task-completed .task-details {
+  text-decoration: line-through;
+  color: #a0a0a0;
+}
+
+.task-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.complete-btn, .delete-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.complete-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.empty-state {
+  text-align: center;
+  font-style: italic;
+  color: #999;
+}
+
+.task-category {
+    font-size: 0.7em;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 12px;
+    color: white;
+    margin-left: 8px;
+}
+
+.task-category.study { background-color: #007bff; }
+.task-category.personal { background-color: #28a745; }
+.task-category.health { background-color: #ffc107; }
+
+/* --- Calendar Section --- */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-nav-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--primary-color);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  text-align: center;
+}
+
+.weekday {
+  font-weight: bold;
+  color: var(--secondary-color);
+  padding: 10px 0;
+}
+
+.days-container {
+    display: contents;
+}
+
+.calendar-day {
+  padding: 15px 5px;
+  background-color: #f9f9f9;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.calendar-day:hover {
+  background-color: var(--primary-light);
+}
+
+.calendar-day-number {
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+.calendar-day.active-day {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.calendar-day.active-day .calendar-day-number {
+  color: white;
+}
+
+.day-task-indicators {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+}
+
+.task-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* --- Task Details Popup --- */
+.task-details-popup {
+  position: absolute;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+  border-radius: 8px;
+  padding: 15px;
+  width: 250px;
+  z-index: 1000;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.close-popup-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+#popup-task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+}
+
+.add-task-btn {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* --- Modal --- */
+.modal {
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: var(--card-background);
+  padding: 25px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.modal-content form label {
+  display: block;
+  margin: 15px 0 5px;
+  font-weight: bold;
+}
+
+.modal-content form input,
+.modal-content form select {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  font-size: 1rem;
+}
+
+.modal-content form button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#monthlyScheduleOptions {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+#monthlyScheduleOptions label {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: normal;
+}
+
+/* --- Insights Chart --- */
+#categoryChart {
+  max-height: 300px;
+}
+
+/* --- Focus Timer Styles --- */
+.timer-container {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 40px auto;
+}
+
+.timer-circle {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.timer-circle .bg {
+    fill: none;
+    stroke: #e6e6e6;
+    stroke-width: 5;
+}
+
+.timer-circle .progress {
+    fill: none;
+    stroke: var(--primary-color);
+    stroke-width: 5;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s linear;
+}
+
+.timer-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+    text-align: center;
+    line-height: 1;
+}
+
+.timer-value::after {
+    content: "Focus";
+    display: block;
+    font-size: 1rem;
+    font-weight: normal;
+    color: var(--text-color);
+    margin-top: 5px;
+}
+
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.timer-controls button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+#startTimerBtn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#startTimerBtn:hover {
+    background-color: #6a5ac9;
+}
+
+#pauseTimerBtn,
+#resetTimerBtn {
+    background-color: #f0f0f0;
+    color: var(--secondary-color);
+}
+
+#pauseTimerBtn:hover,
+#resetTimerBtn:hover {
+    background-color: #e0e0e0;
+}
+
+.wellness-tip-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    background-color: var(--primary-light);
+}
+
+.wellness-tip-card .card-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+}

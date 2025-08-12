@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enhanced Student Planner</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section id="loginPage" class="auth-body" data-view="login">
+      <div class="auth-container">
+        <div class="login-image">
+          <img src="assets/images-2.jpeg" alt="Student Planner Login Image" />
+        </div>
+        <h1 class="auth-title">Study Planner</h1>
+<p class="auth-subtitle">Welcome back! Your personal study assistant</p>
+
+        <p class="auth-subtitle">Login to continue or try the demo</p>
+        <form class="auth-form" id="loginForm">
+          <label>
+            <span class="visually-hidden">Email</span>
+            <input type="email" placeholder="Email" required />
+          </label>
+          <label>
+            <span class="visually-hidden">Password</span>
+            <input type="password" placeholder="Password" required />
+          </label>
+          <button type="submit" class="auth-btn">Log In</button>
+        </form>
+        <button class="auth-btn demo-btn" id="demoBtn">Try Demo</button>
+        <p class="auth-footer">
+          Don't have an account?
+          <a href="#" data-action="showSignup">Sign Up</a>
+        </p>
+      </div>
+    </section>
+
+    <section id="signupPage" class="auth-body hidden" data-view="signup">
+      <div class="auth-container">
+        <div class="login-image">🎓</div>
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-subtitle">Join the Student Planner</p>
+        <form class="auth-form" id="signupForm">
+          <label>
+            <span class="visually-hidden">Full Name</span>
+            <input type="text" placeholder="Full Name" required />
+          </label>
+          <label>
+            <span class="visually-hidden">Email</span>
+            <input type="email" placeholder="Email" required />
+          </label>
+          <label>
+            <span class="visually-hidden">Password</span>
+            <input type="password" placeholder="Password" required />
+          </label>
+          <button type="submit" class="auth-btn">Sign Up</button>
+        </form>
+        <p class="auth-footer">
+          Already have an account?
+          <a href="#" data-action="showLogin">Log In</a>
+        </p>
+      </div>
+    </section>
+
+    <div id="appView" class="app-view hidden" data-view="app">
+      <aside class="sidebar">
+        <nav class="sidebar-nav">
+          <a href="#" data-section="dashboard" class="active">Dashboard</a>
+          <a href="#" data-section="planner">Planner</a>
+          <a href="#" data-section="tasks">All Tasks</a>
+          <a href="#" data-section="focus">Focus Timer</a>
+          <a href="#" data-section="insights">Insights</a>
+          <a href="#" id="logoutBtn" class="logout-btn">Log Out</a>
+        </nav>
+      </aside>
+
+      <main class="page-content">
+        <section id="dashboard" class="section active-section">
+          <header class="header">
+            <h1>Student Dashboard</h1>
+            <p>Your personalized overview</p>
+          </header>
+          <div class="dashboard-grid">
+            <article class="card summary-card">
+              <div class="card-icon">✅</div>
+              <h3>Tasks Today</h3>
+              <p id="tasksTodayCount">0</p>
+            </article>
+            <article class="card summary-card">
+              <div class="card-icon">🗓️</div>
+              <h3>Total Tasks</h3>
+              <p id="totalTasksCount">0</p>
+            </article>
+            <article class="card summary-card">
+              <div class="card-icon">⏱️</div>
+              <h3>Focus Timer</h3>
+              <p id="timerStatusDisplay">25:00</p>
+            </article>
+            <article class="card full-width">
+              <h2>Upcoming Tasks</h2>
+              <ul id="upcomingTasksList" class="task-list">
+                <li class="empty-state">No upcoming tasks. Add some!</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h2>Monthly Goals</h2>
+              <ul id="monthlyGoalsList" class="goal-list">
+                <li class="empty-state">No monthly goals set.</li>
+              </ul>
+        </section>
+
+        <section id="planner" class="section hidden">
+          <header class="header">
+            <h1>📅 Monthly Planner</h1>
+            <p>Schedule your tasks and events for the future</p>
+          </header>
+          <article class="card">
+            <div class="calendar-header">
+              <button id="prevMonthBtn" class="calendar-nav-btn">←</button>
+              <h3 id="monthAndYear"></h3>
+              <button id="nextMonthBtn" class="calendar-nav-btn">→</button>
+            </div>
+            <div class="calendar-grid">
+              <div class="weekday">Sun</div>
+              <div class="weekday">Mon</div>
+              <div class="weekday">Tue</div>
+              <div class="weekday">Wed</div>
+              <div class="weekday">Thu</div>
+              <div class="weekday">Fri</div>
+              <div class="weekday">Sat</div>
+              <div id="calendarDays" class="days-container">
+                </div>
+            </div>
+          </article>
+        </section>
+
+        <section id="tasks" class="section hidden">
+          <header class="header">
+            <h1>📝 All Tasks</h1>
+            <p>Manage your tasks and monthly goals</p>
+          </header>
+          <article class="card">
+            <h3>Add New Task</h3>
+            <button id="openTaskModalBtn">Add Task</button>
+          </article>
+          <article class="card">
+            <h3>Filter Tasks</h3>
+            <div class="filter-buttons">
+              <button class="filter-btn active" data-filter="all">All Tasks</button>
+              <button class="filter-btn" data-filter="one-time">One-Time</button>
+              <button class="filter-btn" data-filter="monthly">Monthly</button>
+              <button class="filter-btn" data-filter="scheduled">Scheduled</button>
+            </div>
+          </article>
+          <article class="card">
+            <h3>Task List</h3>
+            <ul id="allTasksList" class="task-list">
+              <li class="empty-state">No tasks found.</li>
+            </ul>
+          </article>
+        </section>
+
+        <section id="focus" class="section hidden">
+            <header class="header">
+                <h1>⏱️ Focus Timer</h1>
+                <p>Stay productive with Pomodoro sessions</p>
+            </header>
+            <article class="card">
+                <div class="timer-container">
+                    <svg class="timer-circle" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" class="bg"></circle>
+                        <circle cx="50" cy="50" r="45" class="progress"></circle>
+                    </svg>
+                    <div class="timer-value" id="timerDisplay">25:00</div>
+                </div>
+                <div class="timer-controls">
+                    <button id="startTimerBtn">Start</button>
+                    <button id="pauseTimerBtn">Pause</button>
+                    <button id="resetTimerBtn">Reset</button>
+                </div>
+            </article>
+            <article class="card wellness-tip-card">
+                <div class="card-icon">💧</div>
+                <h3>Wellness Tip</h3>
+                <p>Remember to drink water</p>
+            </article>
+        </section>
+
+
+        <section id="insights" class="section hidden">
+          <header class="header">
+            <h1>📈 Insights</h1>
+            <p>See your productivity stats and progress</p>
+          </header>
+          <div class="insights-cards">
+            <article class="card">
+              <h3>Completed Tasks This Month:</h3>
+              <p id="completedTasksCount">0</p>
+            </article>
+            <article class="card">
+              <h3>Focus Sessions:</h3>
+              <p id="focusSessionsCount">0</p>
+            </article>
+            <article class="card">
+              <h3>Monthly Goals Progress:</h3>
+              <p id="monthlyGoalsProgress">0%</p>
+            </article>
+          </div>
+          <article class="card full-width">
+            <h3>Task Completion by Category</h3>
+            <canvas id="categoryChart"></canvas>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <div id="taskModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modalTitle">Add New Task</h2>
+            <form id="taskForm">
+                <label for="taskName">Task Name:</label>
+                <input type="text" id="taskName" required>
+
+                <label for="taskFrequency">Task Frequency:</label>
+                <select id="taskFrequency" required>
+                    <option value="one-time">One-Time</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+
+                <label for="taskCategory">Category:</label>
+                <select id="taskCategory">
+                    <option value="study">Study</option>
+                    <option value="personal">Personal</option>
+                    <option value="health">Health</option>
+                </select>
+
+                <div id="oneTimeFields">
+                    <label for="taskDate">Date:</label>
+                    <input type="date" id="taskDate">
+
+                    <label for="taskTime">Time:</label>
+                    <select id="taskTime">
+                        <option value="8 AM">8 AM</option>
+                        <option value="9 AM">9 AM</option>
+                        <option value="10 AM">10 AM</option>
+                        <option value="11 AM">11 AM</option>
+                        <option value="12 PM">12 PM</option>
+                        <option value="1 PM">1 PM</option>
+                        <option value="2 PM">2 PM</option>
+                        <option value="3 PM">3 PM</option>
+                        <option value="4 PM">4 PM</option>
+                        <option value="5 PM">5 PM</option>
+                    </select>
+                </div>
+
+                <div id="monthlyScheduleOptions" class="schedule-options">
+                    <h4>Schedule for specific days (optional):</h4>
+                    <label><input type="checkbox" value="Mon"> Monday</label>
+                    <label><input type="checkbox" value="Tue"> Tuesday</label>
+                    <label><input type="checkbox" value="Wed"> Wednesday</label>
+                    <label><input type="checkbox" value="Thu"> Thursday</label>
+                    <label><input type="checkbox" value="Fri"> Friday</label>
+                    <label><input type="checkbox" value="Sat"> Saturday</label>
+                    <label><input type="checkbox" value="Sun"> Sunday</label>
+
+                    <label for="monthlyTime">Time:</label>
+                    <select id="monthlyTime">
+                        <option value="">No specific time</option>
+                        <option value="8 AM">8 AM</option>
+                        <option value="9 AM">9 AM</option>
+                        <option value="10 AM">10 AM</option>
+                        <option value="11 AM">11 AM</option>
+                        <option value="12 PM">12 PM</option>
+                        <option value="1 PM">1 PM</option>
+                        <option value="2 PM">2 PM</option>
+                        <option value="3 PM">3 PM</option>
+                        <option value="4 PM">4 PM</option>
+                        <option value="5 PM">5 PM</option>
+                    </select>
+                </div>
+                <button type="submit" id="saveTaskBtn">Save Task</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="task-details-popup" class="task-details-popup hidden">
+        <div class="popup-header">
+            <span id="popup-date"></span>
+            <button class="close-popup-btn">&times;</button>
+        </div>
+        <ul id="popup-task-list">
+            </ul>
+        <button id="addTaskToDayBtn" class="add-task-btn">Add Task</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
