@@ -604,3 +604,142 @@ body {
     font-size: 2rem;
     color: var(--primary-color);
 }
+/* --- Mobile Responsive Styles --- */
+
+/* Styles for devices up to 768px wide (e.g., Tablets, large phones) */
+@media (max-width: 768px) {
+    .app-view {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 10px 0; /* Adjust padding for full width */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: fixed; /* Make it stick to the top */
+        z-index: 100;
+        top: 0;
+        background-color: var(--card-background);
+    }
+    
+    .sidebar-nav {
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 5px;
+        overflow-x: auto; /* Allows horizontal scrolling for many links */
+        white-space: nowrap; /* Prevents wrapping */
+    }
+    
+    .sidebar-nav a {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+
+    .page-content {
+        padding: 10px;
+        margin-top: 60px; /* Add margin to prevent content from hiding behind the fixed sidebar */
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .calendar-grid {
+        font-size: 0.8rem;
+    }
+
+    .calendar-day {
+        padding: 10px 2px;
+        min-height: 50px;
+        font-size: 0.9rem;
+    }
+
+    .calendar-day-number {
+        font-size: 1rem;
+    }
+
+    .day-task-indicators {
+        bottom: 2px;
+    }
+
+    .task-details-popup {
+        width: calc(100% - 20px);
+        left: 10px !important;
+        top: auto !important;
+        bottom: 10px;
+        transform: none;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .timer-container {
+        width: 200px;
+        height: 200px;
+        margin: 20px auto;
+    }
+
+    .timer-value {
+        font-size: 2.5rem;
+    }
+
+    .timer-value::after {
+        font-size: 0.9rem;
+    }
+
+    .timer-controls button {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Styles for very small devices (e.g., iPhones SE, older phones) */
+@media (max-width: 480px) {
+    .auth-title {
+        font-size: 2rem; /* Reduce font size on smaller screens */
+    }
+    
+    .auth-subtitle {
+        font-size: 1rem;
+    }
+
+    .login-image {
+        font-size: 3rem;
+    }
+
+    .header h1 {
+        font-size: 1.2rem;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .sidebar-nav a {
+        font-size: 0.7rem;
+        padding: 8px 8px;
+    }
+
+    .dashboard-grid .summary-card p {
+        font-size: 1.5rem;
+    }
+    
+    .timer-container {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .timer-value {
+        font-size: 2rem;
+    }
+}
