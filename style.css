@@ -743,3 +743,37 @@ body {
         font-size: 2rem;
     }
 }
+/* Styling for the main "Add Task" button */
+#openTaskModalBtn {
+  background-color: var(--primary-color); /* This will use your main purple color */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#openTaskModalBtn:hover {
+  background-color: #6a5ac9; /* A slightly darker shade of purple for hover */
+}
+
+/* Styling for all filter buttons */
+.filter-btn {
+  padding: 8px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background-color: #f0f2f5; /* A light gray for inactive buttons */
+  color: var(--secondary-color);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* This is the style for the active filter button */
+.filter-btn.active {
+  background-color: var(--primary-color); /* The main purple color */
+  color: white;
+  border-color: var(--primary-color);
+}
