@@ -73,6 +73,7 @@ let appState = {
     currentMonth: new Date().getMonth(),
     currentYear: new Date().getFullYear(),
     notificationTimeouts: [], // Store timeout IDs for cleanup
+    editingTask: null, // Track which task is being edited
 };
 
 
@@ -205,6 +206,7 @@ function loadState() {
             const parsed = JSON.parse(savedState);
             appState = { ...appState, ...parsed };
             appState.notificationTimeouts = []; // Reset timeouts
+            appState.editingTask = null; // Reset editing state
         }
     } catch (error) {
         console.error('Failed to load state from localStorage:', error);
@@ -295,6 +297,9 @@ function renderTasks(filter = 'all') {
                 <div class="task-details">${taskDetails}</div>
             </div>
             <div class="task-actions">
+                <button class="edit-btn" data-task-type="${task.frequency}" data-index="${index}" title="Edit Task">
+                    <span class="edit-icon">✏️</span>
+                </button>
                 <button class="complete-btn" data-task-type="${task.frequency}" data-index="${index}">${task.completed ? 'Un-do' : 'Complete'}</button>
                 <button class="delete-btn" data-task-type="${task.frequency}" data-index="${index}">Delete</button>
             </div>
@@ -306,20 +311,62 @@ function renderTasks(filter = 'all') {
     saveState();
 }
 
-function showTaskModal(date = null) {
+function showTaskModal(date = null, editingTaskInfo = null) {
     taskForm.reset();
     monthlyDayCheckboxes.forEach(cb => cb.checked = false);
 
-    if (date) {
-        taskFrequencySelect.value = 'one-time';
-        oneTimeFields.style.display = 'block';
-        monthlyScheduleOptions.style.display = 'none';
-        taskDateInput.value = date;
+    // Update modal title and button text based on mode
+    const modalTitle = document.querySelector('#taskModal h2');
+    const submitButton = document.querySelector('#taskForm button[type="submit"]');
+    
+    if (editingTaskInfo) {
+        modalTitle.textContent = 'Edit Task';
+        submitButton.textContent = 'Update Task';
+        appState.editingTask = editingTaskInfo;
+        
+        // Populate form with existing task data
+        const { taskType, index } = editingTaskInfo;
+        const task = taskType === 'one-time' ? appState.tasks[index] : appState.monthlyGoals[index];
+        
+        taskNameInput.value = task.name;
+        taskCategorySelect.value = task.category || '';
+        taskFrequencySelect.value = task.frequency;
+        
+        if (task.frequency === 'one-time') {
+            oneTimeFields.style.display = 'block';
+            monthlyScheduleOptions.style.display = 'none';
+            taskDateInput.value = task.date || '';
+            taskTimeSelect.value = task.time || '';
+        } else if (task.frequency === 'monthly') {
+            oneTimeFields.style.display = 'none';
+            monthlyScheduleOptions.style.display = 'block';
+            monthlyTimeSelect.value = task.time || '';
+            
+            // Check the appropriate day checkboxes
+            if (task.days) {
+                task.days.forEach(day => {
+                    const checkbox = document.querySelector(`#monthlyScheduleOptions input[value="${day}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+        }
     } else {
-        taskFrequencySelect.value = 'one-time';
-        oneTimeFields.style.display = 'block';
-        monthlyScheduleOptions.style.display = 'none';
+        modalTitle.textContent = 'Add New Task';
+        submitButton.textContent = 'Add Task';
+        appState.editingTask = null;
+        
+        if (date) {
+            taskFrequencySelect.value = 'one-time';
+            oneTimeFields.style.display = 'block';
+            monthlyScheduleOptions.style.display = 'none';
+            taskDateInput.value = date;
+        } else {
+            taskFrequencySelect.value = 'one-time';
+            oneTimeFields.style.display = 'block';
+            monthlyScheduleOptions.style.display = 'none';
+        }
     }
+    
     taskModal.classList.remove('hidden');
 }
 
@@ -327,6 +374,13 @@ function closeTaskModal() {
     taskModal.classList.add('hidden');
     taskForm.reset();
     monthlyDayCheckboxes.forEach(cb => cb.checked = false);
+    appState.editingTask = null;
+    
+    // Reset modal title and button text
+    const modalTitle = document.querySelector('#taskModal h2');
+    const submitButton = document.querySelector('#taskForm button[type="submit"]');
+    modalTitle.textContent = 'Add New Task';
+    submitButton.textContent = 'Add Task';
 }
 
 function addTask(task) {
@@ -342,6 +396,43 @@ function addTask(task) {
     renderTasks();
     renderMonthlyCalendar();
     saveState();
+}
+
+function editTask(taskType, index, updatedTask) {
+    let taskArray = taskType === 'one-time' ? appState.tasks : appState.monthlyGoals;
+    
+    if (taskArray[index]) {
+        // Preserve completion status
+        updatedTask.completed = taskArray[index].completed;
+        
+        // If frequency changed, move task to appropriate array
+        if (updatedTask.frequency !== taskType) {
+            // Remove from old array
+            taskArray.splice(index, 1);
+            
+            // Add to new array
+            if (updatedTask.frequency === 'one-time') {
+                appState.tasks.push(updatedTask);
+            } else if (updatedTask.frequency === 'monthly') {
+                appState.monthlyGoals.push(updatedTask);
+            }
+        } else {
+            // Update in same array
+            taskArray[index] = updatedTask;
+        }
+        
+        // Reschedule all notifications
+        scheduleAllTaskNotifications();
+        
+        renderTasks();
+        renderMonthlyCalendar();
+        saveState();
+        
+        showNotification(
+            "Task Updated! ✏️", 
+            `Successfully updated: ${updatedTask.name}`
+        );
+    }
 }
 
 function deleteTask(taskType, index) {
@@ -695,7 +786,13 @@ taskForm.addEventListener('submit', (e) => {
         task.time = monthlyTimeSelect.value;
     }
 
-    addTask(task);
+    // Check if we're editing or adding
+    if (appState.editingTask) {
+        editTask(appState.editingTask.taskType, appState.editingTask.index, task);
+    } else {
+        addTask(task);
+    }
+    
     taskForm.reset();
     closeTaskModal();
 });
@@ -711,6 +808,8 @@ allTasksList.addEventListener('click', (e) => {
         deleteTask(taskType, index);
     } else if (button.classList.contains('complete-btn')) {
         toggleTaskCompletion(taskType, index);
+    } else if (button.classList.contains('edit-btn')) {
+        showTaskModal(null, { taskType, index });
     }
 });
 
@@ -784,6 +883,7 @@ logoutBtn.addEventListener('click', () => {
         currentMonth: new Date().getMonth(),
         currentYear: new Date().getFullYear(),
         notificationTimeouts: [],
+        editingTask: null,
     };
 
     // Save cleared state
