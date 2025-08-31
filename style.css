@@ -777,3 +777,87 @@ body {
   color: white;
   border-color: var(--primary-color);
 }
+/* Edit Button Styles */
+.edit-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 36px;
+    margin-right: 8px;
+}
+
+.edit-btn:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.edit-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.edit-btn .edit-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* Update task actions layout to accommodate edit button */
+.task-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .edit-btn {
+        padding: 6px 8px;
+        min-width: 36px;
+        height: 32px;
+        margin-right: 4px;
+    }
+    
+    .edit-btn .edit-icon {
+        font-size: 14px;
+    }
+    
+    .task-actions {
+        gap: 4px;
+    }
+}
+
+/* Optional: If you want text instead of emoji */
+.edit-btn-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-right: 8px;
+}
+
+.edit-btn-text:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.edit-btn-text:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
