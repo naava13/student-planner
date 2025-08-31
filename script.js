@@ -907,3 +907,42 @@ document.addEventListener('DOMContentLoaded', () => {
     // Schedule notifications for all existing tasks
     scheduleAllTaskNotifications();
 });
+
+function showNotification(message, type = 'success') {
+  const container = document.getElementById('notificationContainer');
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+
+  container.appendChild(notification);
+
+  // Remove notification after 5 seconds
+  setTimeout(() => {
+    notification.remove();
+  }, 5000);
+}
+
+// Example usage:
+// showNotification('Welcome back!', 'success');
+// showNotification('Invalid credentials.', 'error');
+// showNotification('Your session is about to expire.', 'warning');
+
+function showTaskReminder(taskName, time) {
+  const message = `⏰ Reminder: "${taskName}" is due at ${time}.`;
+  showNotification(message, 'warning');
+}
+
+function showWellnessNotification(tip) {
+  const message = `💡 Wellness Tip: ${tip}`;
+  showNotification(message, 'success');
+}
+
+// Example usage:
+// showTaskReminder('Math Homework', '3:00 PM');
+// showWellnessNotification('Stay hydrated! Drink a glass of water.');
+
+// Example: Trigger a task reminder
+showTaskReminder('Complete Science Project', '4:00 PM');
+
+// Example: Trigger a wellness notification
+showWellnessNotification('Take a 5-minute stretch break!');
