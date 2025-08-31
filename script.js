@@ -72,19 +72,139 @@ let appState = {
     completedTasks: 0,
     currentMonth: new Date().getMonth(),
     currentYear: new Date().getFullYear(),
+    notificationTimeouts: [], // Store timeout IDs for cleanup
 };
+
+
+// --- NOTIFICATIONS ---
+let notificationPermissionRequested = false;
+
+async function requestNotificationPermission() {
+    if (!notificationPermissionRequested && 'Notification' in window && Notification.permission === 'default') {
+        notificationPermissionRequested = true;
+        try {
+            await Notification.requestPermission();
+        } catch (error) {
+            console.warn('Failed to request notification permission:', error);
+        }
+    }
+}
+
+function showNotification(title, body, icon = null) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+        try {
+            const notification = new Notification(title, { 
+                body,
+                icon: icon || '/favicon.ico',
+                badge: '/favicon.ico'
+            });
+            
+            // Auto-close notification after 5 seconds
+            setTimeout(() => notification.close(), 5000);
+            
+            return notification;
+        } catch (error) {
+            console.warn('Failed to show notification:', error);
+        }
+    }
+}
+
+function clearNotificationTimeouts() {
+    appState.notificationTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+    appState.notificationTimeouts = [];
+}
+
+function scheduleTaskNotification(task) {
+    if (!task || task.completed) return;
+
+    try {
+        if (task.frequency === 'one-time' && task.date && task.time) {
+            const dueDateTime = new Date(`${task.date}T${task.time}`);
+            const reminderTime = dueDateTime.getTime() - 60 * 60 * 1000; // 1 hour before
+            const now = Date.now();
+            
+            if (reminderTime > now && dueDateTime > now) {
+                const delay = reminderTime - now;
+                const timeoutId = setTimeout(() => {
+                    showNotification(
+                        "Task Reminder", 
+                        `${task.name} is due in 1 hour!`
+                    );
+                }, delay);
+                appState.notificationTimeouts.push(timeoutId);
+            }
+        }
+        
+        // For monthly tasks, check daily if today matches
+        if (task.frequency === 'monthly' && task.days && task.days.length > 0 && task.time) {
+            const checkDailyTimeoutId = setTimeout(() => {
+                checkMonthlyTaskReminders(task);
+            }, getMillisecondsUntilMidnight());
+            appState.notificationTimeouts.push(checkDailyTimeoutId);
+        }
+    } catch (error) {
+        console.warn('Failed to schedule notification for task:', task.name, error);
+    }
+}
+
+function checkMonthlyTaskReminders(task) {
+    const now = new Date();
+    const todayDay = now.toLocaleString('en-US', { weekday: 'short' });
+    
+    if (task.days.includes(todayDay) && task.time) {
+        const [hours, minutes] = task.time.split(':').map(Number);
+        const reminderTime = new Date();
+        reminderTime.setHours(hours - 1, minutes, 0, 0);
+        
+        if (reminderTime > now) {
+            const delay = reminderTime.getTime() - now.getTime();
+            const timeoutId = setTimeout(() => {
+                showNotification(
+                    "Monthly Task Reminder", 
+                    `${task.name} starts in 1 hour!`
+                );
+            }, delay);
+            appState.notificationTimeouts.push(timeoutId);
+        }
+    }
+    
+    // Schedule next daily check
+    const nextCheckTimeoutId = setTimeout(() => {
+        checkMonthlyTaskReminders(task);
+    }, getMillisecondsUntilMidnight());
+    appState.notificationTimeouts.push(nextCheckTimeoutId);
+}
+
+function getMillisecondsUntilMidnight() {
+    const now = new Date();
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0);
+    return midnight.getTime() - now.getTime();
+}
+
+function scheduleAllTaskNotifications() {
+    clearNotificationTimeouts();
+    [...appState.tasks, ...appState.monthlyGoals].forEach(task => {
+        scheduleTaskNotification(task);
+    });
+}
 
 
 // --- PERSISTENCE ---
 function saveState() {
-    localStorage.setItem('studentPlannerState', JSON.stringify(appState));
+    // Don't save timeout IDs as they can't be restored
+    const stateToSave = { ...appState };
+    delete stateToSave.notificationTimeouts;
+    localStorage.setItem('studentPlannerState', JSON.stringify(stateToSave));
 }
 
 function loadState() {
     try {
         const savedState = localStorage.getItem('studentPlannerState');
         if (savedState) {
-            appState = JSON.parse(savedState);
+            const parsed = JSON.parse(savedState);
+            appState = { ...appState, ...parsed };
+            appState.notificationTimeouts = []; // Reset timeouts
         }
     } catch (error) {
         console.error('Failed to load state from localStorage:', error);
@@ -215,6 +335,10 @@ function addTask(task) {
     } else if (task.frequency === 'monthly') {
         appState.monthlyGoals.push(task);
     }
+    
+    // Schedule notification for the new task
+    scheduleTaskNotification(task);
+    
     renderTasks();
     renderMonthlyCalendar();
     saveState();
@@ -226,6 +350,10 @@ function deleteTask(taskType, index) {
     } else if (taskType === 'monthly') {
         appState.monthlyGoals.splice(index, 1);
     }
+    
+    // Reschedule all notifications after deletion
+    scheduleAllTaskNotifications();
+    
     renderTasks();
     renderMonthlyCalendar();
     saveState();
@@ -238,10 +366,19 @@ function toggleTaskCompletion(taskType, index) {
         taskArray[index].completed = !isCompleted;
         if (!isCompleted) {
             appState.completedTasks++;
+            // Show completion notification
+            showNotification(
+                "Task Completed! 🎉", 
+                `Great job completing: ${taskArray[index].name}`
+            );
         } else {
             appState.completedTasks--;
         }
     }
+    
+    // Reschedule notifications
+    scheduleAllTaskNotifications();
+    
     renderTasks();
     renderMonthlyCalendar();
     saveState();
@@ -344,6 +481,10 @@ function updateTimerDisplay() {
 
 function startTimer() {
     if (appState.timerInterval) return;
+    
+    // Request notification permission when timer starts
+    requestNotificationPermission();
+    
     appState.timerInterval = setInterval(() => {
         if (appState.timerSeconds > 0) {
             appState.timerSeconds--;
@@ -351,7 +492,14 @@ function startTimer() {
         } else {
             clearInterval(appState.timerInterval);
             appState.timerInterval = null;
+            
+            // Show both alert and notification
             alert('Time is up! Take a break.');
+            showNotification(
+                "Pomodoro Complete! 🍅", 
+                "Great focus session! Time for a well-deserved break."
+            );
+            
             appState.focusSessions++;
             resetTimer();
             saveState();
@@ -480,17 +628,23 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     e.preventDefault();
     switchView('app');
     switchSection('dashboard');
+    // Request notification permission on login
+    requestNotificationPermission();
 });
 
 document.getElementById('signupForm').addEventListener('submit', (e) => {
     e.preventDefault();
     switchView('app');
     switchSection('dashboard');
+    // Request notification permission on signup
+    requestNotificationPermission();
 });
 
 document.getElementById('demoBtn').addEventListener('click', () => {
     switchView('app');
     switchSection('dashboard');
+    // Request notification permission in demo mode
+    requestNotificationPermission();
 });
 
 navLinks.forEach((link) => {
@@ -611,20 +765,12 @@ addTaskToDayBtn.addEventListener('click', () => {
     showTaskModal(date);
 });
 
-
-// --- INITIALIZATION ---
-document.addEventListener('DOMContentLoaded', () => {
-    loadState();
-    renderMonthlyCalendar();
-    updateTimerDisplay();
-    updateDashboard();
-    renderTasks();
-    switchView(appState.activeView);
-    switchSection(appState.activeSection);
-});
+// Logout functionality
 const logoutBtn = document.getElementById('logoutBtn');
-
 logoutBtn.addEventListener('click', () => {
+    // Clear notification timeouts
+    clearNotificationTimeouts();
+    
     // Clear app state (or reset to initial)
     appState = {
         activeView: 'login',
@@ -637,6 +783,7 @@ logoutBtn.addEventListener('click', () => {
         completedTasks: 0,
         currentMonth: new Date().getMonth(),
         currentYear: new Date().getFullYear(),
+        notificationTimeouts: [],
     };
 
     // Save cleared state
@@ -644,4 +791,19 @@ logoutBtn.addEventListener('click', () => {
 
     // Switch to login view
     switchView('login');
+});
+
+
+// --- INITIALIZATION ---
+document.addEventListener('DOMContentLoaded', () => {
+    loadState();
+    renderMonthlyCalendar();
+    updateTimerDisplay();
+    updateDashboard();
+    renderTasks();
+    switchView(appState.activeView);
+    switchSection(appState.activeSection);
+    
+    // Schedule notifications for all existing tasks
+    scheduleAllTaskNotifications();
 });
