@@ -214,26 +214,107 @@
       </main>
     </div>
 
-    <div id="taskModal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2 id="modalTitle">Add New Task</h2>
-            <form id="taskForm">
+   <!-- Update your existing task modal with this structure -->
+<div id="taskModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Add New Task</h2> <!-- This will change dynamically to "Edit Task" -->
+        <form id="taskForm">
+            <div class="form-group">
                 <label for="taskName">Task Name:</label>
                 <input type="text" id="taskName" required>
-
-                <label for="taskFrequency">Task Frequency:</label>
-                <select id="taskFrequency" required>
-                    <option value="one-time">One-Time</option>
-                    <option value="monthly">Monthly</option>
-                </select>
-
+            </div>
+            
+            <div class="form-group">
                 <label for="taskCategory">Category:</label>
                 <select id="taskCategory">
+                    <option value="">Select Category</option>
                     <option value="study">Study</option>
                     <option value="personal">Personal</option>
                     <option value="health">Health</option>
                 </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="taskFrequency">Frequency:</label>
+                <select id="taskFrequency" required>
+                    <option value="one-time">One-time</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+            
+            <div id="oneTimeFields">
+                <div class="form-group">
+                    <label for="taskDate">Date:</label>
+                    <input type="date" id="taskDate">
+                </div>
+                <div class="form-group">
+                    <label for="taskTime">Time:</label>
+                    <select id="taskTime">
+                        <option value="">Select Time</option>
+                        <option value="06:00">6:00 AM</option>
+                        <option value="07:00">7:00 AM</option>
+                        <option value="08:00">8:00 AM</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="13:00">1:00 PM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                        <option value="18:00">6:00 PM</option>
+                        <option value="19:00">7:00 PM</option>
+                        <option value="20:00">8:00 PM</option>
+                        <option value="21:00">9:00 PM</option>
+                        <option value="22:00">10:00 PM</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="monthlyScheduleOptions" style="display: none;">
+                <div class="form-group">
+                    <label>Days of the Week:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" value="Mon"> Monday</label>
+                        <label><input type="checkbox" value="Tue"> Tuesday</label>
+                        <label><input type="checkbox" value="Wed"> Wednesday</label>
+                        <label><input type="checkbox" value="Thu"> Thursday</label>
+                        <label><input type="checkbox" value="Fri"> Friday</label>
+                        <label><input type="checkbox" value="Sat"> Saturday</label>
+                        <label><input type="checkbox" value="Sun"> Sunday</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="monthlyTime">Time:</label>
+                    <select id="monthlyTime">
+                        <option value="">Select Time</option>
+                        <option value="06:00">6:00 AM</option>
+                        <option value="07:00">7:00 AM</option>
+                        <option value="08:00">8:00 AM</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="13:00">1:00 PM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                        <option value="18:00">6:00 PM</option>
+                        <option value="19:00">7:00 PM</option>
+                        <option value="20:00">8:00 PM</option>
+                        <option value="21:00">9:00 PM</option>
+                        <option value="22:00">10:00 PM</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit">Add Task</button> <!-- This will change to "Update Task" when editing -->
+        </form>
+    </div>
+</div>
 
                 <div id="oneTimeFields">
                     <label for="taskDate">Date:</label>
