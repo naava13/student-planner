@@ -16,6 +16,8 @@ Features
 ---
 
 ## Screenshots
+## Login Page
+https://github.com/naava13/student-planner/blob/main/Login%20Page.png 
 
 ### Home Page
 ![Home Page](assets/screenshot1.png)
