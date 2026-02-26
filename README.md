@@ -19,13 +19,17 @@ Features
 ## Login Page
 https://github.com/naava13/student-planner/blob/main/Login%20Page.png 
 
-### Home Page
-![Home Page](assets/screenshot1.png)
+### Dashboard Page
+https://github.com/naava13/student-planner/blob/main/Dashboard.png
 
-### Task List
-![Task List](assets/screenshot2.png)
+### Insights Page
+https://github.com/naava13/student-planner/blob/main/Insights.png
 
-*(Replace with your actual screenshots.)*
+### Planner Page
+https://github.com/naava13/student-planner/blob/main/Insights.png,https://github.com/naava13/student-planner/blob/main/Planner.png
+
+### Focus Timer Page 
+https://github.com/naava13/student-planner/blob/main/Focus%20Timer.png
 
 ---
 
