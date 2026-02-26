@@ -26,7 +26,7 @@ https://github.com/naava13/student-planner/blob/main/Dashboard.png
 https://github.com/naava13/student-planner/blob/main/Insights.png
 
 ### Planner Page
-https://github.com/naava13/student-planner/blob/main/Insights.png,https://github.com/naava13/student-planner/blob/main/Planner.png
+https://github.com/naava13/student-planner/blob/main/Planner.png
 
 ### Focus Timer Page 
 https://github.com/naava13/student-planner/blob/main/Focus%20Timer.png
